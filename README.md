@@ -32,9 +32,12 @@ Inicia la aplicación:
 node src/index.js
 ```
 Accede a la aplicación desde tu navegador web utilizando la dirección http://localhost:3000.
-### Uso
-Una vez que la aplicación esté en funcionamiento, podrás acceder a las siguientes rutas:
+### Consumo
+Podrás acceder a la siguiente ruta y a sus diferentes endpoints para descargar los resultaos:
 
-- /loterias: Muestra una lista de las loterías disponibles.
-- /loterias/{nombre-loteria}: Genera una imagen con los resultados del último sorteo de la lotería especificada.
-Para descargar una imagen generada, simplemente haz clic derecho en la imagen y selecciona "Guardar imagen como..." (o la opción equivalente en tu navegador).
+https://generador-imagenes-loterias.onrender.com
+
+endpoints 
+
+- /triple-tachira-piramide: Loteria Triple Tachira, piramide.
+- /triple-tachira-zod: Loteria Triple Tachira, zodiacal

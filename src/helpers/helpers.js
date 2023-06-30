@@ -14,12 +14,13 @@ const getFullDate = (format="") => {
     return `${day}${month}${year}`;
 };
 
-
-const getHour = () => {
+const getHour = (format) => {
+    const hour12 = (format=="24")?false:true;
     const date = new Date().toLocaleString("es-VE", {
         timeZone: "America/Caracas",
         hour:"numeric",
-        minute:"numeric"
+        minute:"numeric",
+        hour12
     });
    return date;
 };

@@ -1,16 +1,23 @@
 const express = require("express");
 const path = require('path');
 const { createCanvas, loadImage, registerFont  } = require("canvas");
-const {getPiramidNumbers} = require("./helpers/getResultados")
+const {getPiramidNumbers,getTripleTachiraZod} = require("./helpers/getResultados")
 const {getFullDate, range} = require("./helpers/helpers")
-
 
 const app = express();
 registerFont(path.join(__dirname,'assets','fonts','MontHeavy.otf'), { family: 'Mont' });
 
 const port = process.env.PORT || 3000;
-
-
+const url = process.env.URL || `localhost:${port}/`;
+const urls = {
+    rutas: {
+        "Piramide_Triple_Tachira": url+'triple-tachira-piramide',
+        "Zodiacal_Triple_Tachira": url+'triple-tachira-zod'
+    }
+}
+app.get("/",(req,res)=>{
+    res.json(urls)
+})
 
 app.get("/triple-tachira-piramide", (req, res) => {
     const canvas = createCanvas(1080, 1920);
@@ -56,27 +63,63 @@ app.get("/triple-tachira-piramide", (req, res) => {
     });
 });
 
-// app.get("/triple-tachira-zod",(req,res)=>{
-//     const canvas = createCanvas(755, 1334);
-//     const ctx = canvas.getContext("2d");
-//     const results = getPiramidNumbers();
+app.get("/triple-tachira-zod", async(req,res)=>{
+    const canvas = createCanvas(755, 1334);
+    const ctx = canvas.getContext("2d");
+    getTripleTachiraZod().then(resultados=>{
+        const date = resultados.date.split(' ')
+    loadImage(path.join(__dirname,'assets','images','triple-tachira-zod.jpg')).then((image) => {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+       /* FECHA */ 
+        ctx.fillStyle = '#fff'; 
+        ctx.font = "50px Mont";
+        ctx.fillText(date[1],80, 130);
+        ctx.font = "70px Mont";
+        ctx.fillText(date[0],85, 75);
 
-//     loadImage(path.join(__dirname,'assets','images','triple-tachira-zod.jpg')).then((image) => {
-//         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+       /* HORA */ 
+       const x = 245; // Coordenada x del cuadrado
+       const y = 365; // Coordenada y del cuadrado
+       const width = 210; // Ancho del cuadrado
+       const height = 60; // Alto del cuadrado
+       const borderRadius = 20; // Radio de los bordes redondeados
+       ctx.beginPath();
+       ctx.moveTo(x + borderRadius, y);
+       ctx.lineTo(x + width - borderRadius, y);
+       ctx.arc(x + width - borderRadius, y + borderRadius, borderRadius, (Math.PI * 3) / 2, 0);
+       ctx.lineTo(x + width, y + height - borderRadius);
+       ctx.arc(x + width - borderRadius, y + height - borderRadius, borderRadius, 0, Math.PI / 2);
+       ctx.lineTo(x + borderRadius, y + height);
+       ctx.arc(x + borderRadius, y + height - borderRadius, borderRadius, Math.PI / 2, Math.PI);
+       ctx.lineTo(x, y + borderRadius);
+       ctx.arc(x + borderRadius, y + borderRadius, borderRadius, Math.PI, (Math.PI * 3) / 2);
+       ctx.closePath();
+       ctx.fill();
+       ctx.fillStyle = '#000'; 
+       ctx.font = "40px Mont";
 
-//         ctx.font = "70px Mont";
-//         ctx.fillStyle = '#0036a3'; 
-        
+       ctx.stroke();
+       ctx.fillText(resultados.hour,255,410)
 
+        /* RESULTADOS */ 
+       ctx.font = "70px Mont";
+        ctx.fillStyle = '#0036a3'; 
+        ctx.fillText(resultados.a,434, 560);
+        ctx.fillText(resultados.b,434, 744);
+        ctx.fillText(resultados.zod.num,434, 927);
+        ctx.font = "50px Mont";
+        ctx.fillText(resultados.zod.sg,445, 978);
 
-//         res.setHeader('Content-Type', 'image/png');
-//         res.setHeader('Content-Disposition', `attachment; filename="piramide-${getFullDate()}.png"`);
+        res.setHeader('Content-Type', 'image/png');
+        res.setHeader('Content-Disposition', `attachment; filename="tripletachirazod-${getFullDate()}.png"`);
 
-//         canvas.createPNGStream().pipe(res);
+        canvas.createPNGStream().pipe(res);
 
-        
-//     });
-// })
+        // res.setHeader('Content-Type', 'image/png');
+        // res.send(canvas.toBuffer());
+    });
+})
+})
  
 app.listen(port, () => {
     console.log("Servidor escuchando en el puerto "+port);

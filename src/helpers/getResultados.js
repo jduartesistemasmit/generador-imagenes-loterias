@@ -31,30 +31,35 @@ const getPiramidNumbers = () => {
 
 //GENERADOR NUMEROS TRIPLE TACHIRA ZOD
 const getTripleTachiraZod = async () => {
+    const resultados = {date:'',hour:'00:00 AM', a:'- - -',b:'- - -',zod:{num:'- - -',sg:'- - -'}};
+    resultados.date = new Date().toLocaleDateString("es-VE", {
+        timeZone: "America/Caracas",
+        day:"numeric",
+        month:"short"
+    }).toUpperCase()
+    const hour = getHour("24").split(":")[0];
     await axios.get(url, { headers }).then(({ data }) => {
-       
-        const resultados = {
-            a: null,
-            b: null,
-            zod: null
+        if (range(hour, 13, 15)) {
+            resultados.hour = "01:00 PM"
+            resultados.a = data[154].num;    
+            resultados.b = data[155].num;    
+            resultados.zod = {num: data[160].num, sg:data[160].sg};    
         }
-        
-        const hour = getHour().split(":")[0];
-
-           resultados.a = data[154];    
-           resultados.b = data[155];    
-           resultados.c = data[160];    
-console.log(resultados);
-        // if (range(hour, 1, 3)) {
-            // return [data[154],data[155],data[160]];
-        // }
-
-        //     resultados.forEach((element,index) => {
-        // console.log(element.lot);
-        // });
+        if (range(hour, 16, 21)) {
+            resultados.hour = "04:00 PM"
+            resultados.a = data[154].num;    
+            resultados.b = data[155].num;    
+            resultados.zod = data[160].num;    
+        }
+        if (range(hour, 22, 0)) {
+            resultados.hour = "10:00 PM"
+            resultados.a = data[154].num;    
+            resultados.b = data[155].num;    
+            resultados.zod = data[160].num;    
+        }
     });
+    return resultados;
 };
 
-getTripleTachiraZod();
 
-module.exports = { getPiramidNumbers };
+module.exports = { getPiramidNumbers, getTripleTachiraZod };
