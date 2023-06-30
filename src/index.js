@@ -14,7 +14,7 @@ registerFont(path.join(__dirname, "assets", "fonts", "MontHeavy.otf"), {
 });
 
 const port = process.env.PORT || 3000;
-const url = process.env.URL || `localhost:${port}/`;
+const url = 'https://generador-imagenes-loterias.onrender.com/';
 const urls = {
     rutas: {
         Piramide_Triple_Tachira: url + "triple-tachira-piramide",
