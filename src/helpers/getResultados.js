@@ -43,19 +43,21 @@ const getTripleTachiraZod = async () => {
         }
         if (range(hour, 16, 21)) {
             resultados.hour = "04:00 PM"
-            resultados.a = data[154].num;    
-            resultados.b = data[155].num;    
-            resultados.zod = data[160].num;    
+            resultados.a = data[156].num;    
+            resultados.b = data[157].num;    
+            resultados.zod = {num: data[161].num, sg:data[161].sg};  
         }
         if (range(hour, 22, 0)) {
             resultados.hour = "10:00 PM"
-            resultados.a = data[154].num;    
-            resultados.b = data[155].num;    
+            resultados.a = data[158].num;    
+            resultados.b = data[159].num;    
             resultados.zod = data[160].num;    
+            resultados.zod = {num: data[162].num, sg:data[162].sg}; 
         }
     });
     return resultados;
 };
+
 
 const getTripleGanaSuperGanaZod = async () => {
     const resultados = {
