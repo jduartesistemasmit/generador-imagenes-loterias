@@ -41,3 +41,4 @@ endpoints
 
 - /triple-tachira-piramide: Loteria Triple Tachira, piramide.
 - /triple-tachira-zod: Loteria Triple Tachira, zodiacal
+- /triplegana-supergana-zod: Loteria TripleGana y SuperGana, zodiacal
