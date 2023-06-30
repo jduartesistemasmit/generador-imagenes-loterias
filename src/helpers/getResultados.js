@@ -31,12 +31,8 @@ const getPiramidNumbers = () => {
 
 //GENERADOR NUMEROS TRIPLE TACHIRA ZOD
 const getTripleTachiraZod = async () => {
-    const resultados = {date:'',hour:'00:00 AM', a:'- - -',b:'- - -',zod:{num:'- - -',sg:'- - -'}};
-    resultados.date = new Date().toLocaleDateString("es-VE", {
-        timeZone: "America/Caracas",
-        day:"numeric",
-        month:"short"
-    }).toUpperCase()
+    const resultados = {hour:'00:00 AM', a:'- - -',b:'- - -',zod:{num:'- - -',sg:'- - -'}};
+    
     const hour = getHour("24").split(":")[0];
     await axios.get(url, { headers }).then(({ data }) => {
         if (range(hour, 13, 15)) {
@@ -61,5 +57,38 @@ const getTripleTachiraZod = async () => {
     return resultados;
 };
 
+const getTripleGanaSuperGanaZod = async () => {
+    const resultados = {
+        hour:'00:00 AM',
+        supergana:{
+            num: '- - - -',
+            sg:'- - -'
+        },  
+        triplegana:{
+            num: '- - -',
+            sg:'- - -'
+        }  
+    };
+    
+    const hour = getHour("24").split(":")[0];
+    await axios.get(url, { headers }).then(({ data }) => {
+        if (range(hour, 13, 15)) {
+            resultados.hour = "01:00 PM"
+            resultados.supergana = {num:data[151].num, sg:data[151].sg};    
+            resultados.triplegana = {num:data[183].num, sg:data[183].sg};    
+        }
+        if (range(hour, 16, 21)) {
+            resultados.hour = "04:00 PM"
+          resultados.supergana = {num:data[152].num, sg:data[152].sg};    
+            resultados.triplegana = {num:data[184].num, sg:data[184].sg};  
+        }
+        if (range(hour, 22, 0)) {
+            resultados.hour = "10:00 PM"
+           resultados.supergana = {num:data[153].num, sg:data[153].sg};    
+            resultados.triplegana = {num:data[185].num, sg:data[185].sg};   
+        }
+    });
+    return resultados;
+};
 
-module.exports = { getPiramidNumbers, getTripleTachiraZod };
+module.exports = { getPiramidNumbers, getTripleTachiraZod, getTripleGanaSuperGanaZod };
