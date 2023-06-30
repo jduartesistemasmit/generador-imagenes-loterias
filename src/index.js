@@ -244,9 +244,9 @@ app.get("/triplegana-supergana-zod", (req, res) => {
 
             ctx.font = "60px Mont";
             drawRoundedRect(120, 745, 310, 100, 20, "white", "black", "black");
-            ctx.fillText(resultados.hour, 132, 820);
+            ctx.fillText(resultados.hour, 132, 817);
             drawRoundedRect(120, 1345, 310, 100, 20, "white", "black", "black");
-            ctx.fillText(resultados.hour, 132, 1420);
+            ctx.fillText(resultados.hour, 132, 1417);
 
             ctx.font = "70px Mont";
             ctx.fillText(`${resultados.supergana.num} ${resultados.supergana.sg}`, 575, 828);
