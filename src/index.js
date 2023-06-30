@@ -1,23 +1,23 @@
 const express = require("express");
 const path = require('path');
 const { createCanvas, loadImage, registerFont  } = require("canvas");
-const {getPiramidNumbers,getFullDate} = require("./helpers/getPiramidNumbers")
+const {getPiramidNumbers} = require("./helpers/getResultados")
+const {getFullDate, range} = require("./helpers/helpers")
+
 
 const app = express();
 registerFont(path.join(__dirname,'assets','fonts','MontHeavy.otf'), { family: 'Mont' });
 
 const port = process.env.PORT || 3000;
 
-const range = (n, a, b) => {
-    return n >= a && n <= b;
-};
 
-app.get("/descargar-imagen", (req, res) => {
+
+app.get("/triple-tachira-piramide", (req, res) => {
     const canvas = createCanvas(1080, 1920);
     const ctx = canvas.getContext("2d");
     const results = getPiramidNumbers();
 
-    loadImage(path.join(__dirname,'assets','images','piramide.jpg')).then((image) => {
+    loadImage(path.join(__dirname,'assets','images','triple-tachira-piramide.jpg')).then((image) => {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 
         ctx.font = "70px Mont";
@@ -53,10 +53,30 @@ app.get("/descargar-imagen", (req, res) => {
         res.setHeader('Content-Disposition', `attachment; filename="piramide-${getFullDate()}.png"`);
 
         canvas.createPNGStream().pipe(res);
-
-        
     });
 });
+
+// app.get("/triple-tachira-zod",(req,res)=>{
+//     const canvas = createCanvas(755, 1334);
+//     const ctx = canvas.getContext("2d");
+//     const results = getPiramidNumbers();
+
+//     loadImage(path.join(__dirname,'assets','images','triple-tachira-zod.jpg')).then((image) => {
+//         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+//         ctx.font = "70px Mont";
+//         ctx.fillStyle = '#0036a3'; 
+        
+
+
+//         res.setHeader('Content-Type', 'image/png');
+//         res.setHeader('Content-Disposition', `attachment; filename="piramide-${getFullDate()}.png"`);
+
+//         canvas.createPNGStream().pipe(res);
+
+        
+//     });
+// })
  
 app.listen(port, () => {
     console.log("Servidor escuchando en el puerto "+port);
