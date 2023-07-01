@@ -307,10 +307,10 @@ app.get("/animalitos-loteria", (req, res) => {
                     aux++;
                 }
             }
-            drawResults(507,383,resultados.tropigana)
-            drawResults(777,383,resultados.fruitagana)
+            drawResults(508,383,resultados.tropigana)
+            drawResults(778,383,resultados.fruitagana)
             drawResults(1064,383,resultados.trinapa)
-            drawResults(1323,383,resultados.condorgana)
+            drawResults(1324,383,resultados.condorgana)
 
             // res.setHeader("Content-Type", "image/png");
             // res.send(canvas.toBuffer());
