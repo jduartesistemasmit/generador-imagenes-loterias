@@ -1,27 +1,23 @@
 const express = require("express");
 const path = require("path");
 const { createCanvas, loadImage, registerFont } = require("canvas");
-const {
-    getPiramidNumbers,
-    getTripleTachiraZod,
-    getTripleGanaSuperGanaZod,
-} = require("./helpers/getResultados");
+const { getPiramidNumbers, getTripleTachiraZod, getTripleGanaSuperGanaZod, getResultadosAnimalitosLoteria} = require("./helpers/getResultados");
 const { getFullDate, range } = require("./helpers/helpers");
 
 const app = express();
-registerFont(path.join(__dirname, "assets", "fonts", "MontHeavy.otf"), {
-    family: "Mont",
-});
+registerFont(path.join(__dirname, "assets", "fonts", "MontHeavy.otf"), {family: "Mont",});
 
 const port = process.env.PORT || 3000;
-const url = 'https://generador-imagenes-loterias.onrender.com/';
+const url = "https://generador-imagenes-loterias.onrender.com/";
 const urls = {
     rutas: {
         Piramide_Triple_Tachira: url + "triple-tachira-piramide",
         Zodiacal_Triple_Tachira: url + "triple-tachira-zod",
         SuperGana_TripleGana_Zodiacal: url + "triplegana-supergana-zod",
+        Animalitos_Loteria: url + "animalitos-loteria",
     },
 };
+
 app.get("/", (req, res) => {
     res.json(urls);
 });
@@ -155,6 +151,9 @@ app.get("/triple-tachira-zod", async (req, res) => {
             ctx.fillText(resultados.zod.num, 434, 927);
             ctx.font = "50px Mont";
             ctx.fillText(resultados.zod.sg, 445, 978);
+            
+            // res.setHeader('Content-Type', 'image/png');
+            // res.send(canvas.toBuffer());
 
             res.setHeader("Content-Type", "image/png");
             res.setHeader(
@@ -164,8 +163,6 @@ app.get("/triple-tachira-zod", async (req, res) => {
 
             canvas.createPNGStream().pipe(res);
 
-            // res.setHeader('Content-Type', 'image/png');
-            // res.send(canvas.toBuffer());
         });
     });
 });
@@ -249,15 +246,77 @@ app.get("/triplegana-supergana-zod", (req, res) => {
             ctx.fillText(resultados.hour, 132, 1417);
 
             ctx.font = "70px Mont";
-            ctx.fillText(`${resultados.supergana.num} ${resultados.supergana.sg}`, 575, 828);
-            ctx.fillText(`${resultados.triplegana.num} ${resultados.triplegana.sg}`, 600, 1428);
+            ctx.fillText(
+                `${resultados.supergana.num} ${resultados.supergana.sg}`,
+                575,
+                828
+            );
+            ctx.fillText(
+                `${resultados.triplegana.num} ${resultados.triplegana.sg}`,
+                600,
+                1428
+            );
+
+            // res.setHeader("Content-Type", "image/png");
+            // res.send(canvas.toBuffer());
+
+            res.setHeader("Content-Type", "image/png");
+            res.setHeader(
+                "Content-Disposition",
+                `attachment; filename="triplegana-supergana-zod-${getFullDate()}.png"`
+            );
+
+            canvas.createPNGStream().pipe(res);
+        });
+    });
+});
+
+app.get("/animalitos-loteria", (req, res) => {
+    const canvas = createCanvas(1080, 1920);
+    const ctx = canvas.getContext("2d");
+    const date = new Date().toLocaleDateString("es-VE", {
+        timeZone: "America/Caracas",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+    });
+
+    getResultadosAnimalitosLoteria().then((resultados) => {
+        loadImage(
+            path.join(__dirname, "assets", "images", "animalitos.jpg")
+        ).then((image) => {
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            ctx.font = "50px Mont";
+            ctx.textAlign = "center";
+           ctx.textBaseline = "middle";
+            ctx.fillText(date, 735, 165);
+            
+            const drawResults=(top,left, text)=>{
+                let aux = 0;
+                for (let i = 0; i < 10; i++) {
+                    if (i == 5) {
+                        aux = 0;
+                    }
+                    let x = aux == 0 ? left : left + 5 + 144 * aux;
+                    let y = (i<5)?top:top+113;
+                    ctx.font = "35px Mont";
+                    ctx.fillText(text[i].num, x, y);
+                    y += 28;
+                    ctx.font = `${text[i].sg.length>9? "18px":"23px"} Mont`;
+                    ctx.fillText(text[i].sg, x, y);
+                    aux++;
+                }
+            }
+            drawResults(507,383,resultados.tropigana)
+            drawResults(777,383,resultados.fruitagana)
+            drawResults(1064,383,resultados.trinapa)
+            drawResults(1323,383,resultados.condorgana)
 
             // res.setHeader("Content-Type", "image/png");
             // res.send(canvas.toBuffer());
 
             res.setHeader('Content-Type', 'image/png');
-            res.setHeader('Content-Disposition', `attachment; filename="triplegana-supergana-zod-${getFullDate()}.png"`);
-
+            res.setHeader('Content-Disposition', `attachment; filename="animalitos-lot-${getFullDate()}.png"`);
             canvas.createPNGStream().pipe(res);
         });
     });

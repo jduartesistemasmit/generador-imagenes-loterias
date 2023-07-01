@@ -29,36 +29,43 @@ const getPiramidNumbers = () => {
     return numbers;
 };
 
-//GENERADOR NUMEROS TRIPLE TACHIRA ZOD
+//FILTRAR NUMEROS TRIPLE TACHIRA ZOD
 const getTripleTachiraZod = async () => {
     const resultados = {hour:'00:00 AM', a:'- - -',b:'- - -',zod:{num:'- - -',sg:'- - -'}};
     
     const hour = getHour("24").split(":")[0];
     await axios.get(url, { headers }).then(({ data }) => {
+
+       const loteria = [];
+
+        data.forEach((element) => {
+            if(element.pro=="TACHIRA") loteria.push(element);
+        });
+
         if (range(hour, 13, 15)) {
-            resultados.hour = "01:00 PM"
-            resultados.a = data[154].num;    
-            resultados.b = data[155].num;    
-            resultados.zod = {num: data[160].num, sg:data[160].sg};    
+            resultados.hour = "01:00 PM"            
+            resultados.a = loteria[0].num;    
+            resultados.b = loteria[1].num;    
+            resultados.zod = {num: loteria[6].num, sg:loteria[6].sg};    
         }
         if (range(hour, 16, 21)) {
             resultados.hour = "04:00 PM"
-            resultados.a = data[156].num;    
-            resultados.b = data[157].num;    
-            resultados.zod = {num: data[161].num, sg:data[161].sg};  
+            resultados.a = loteria[2].num;    
+            resultados.b = loteria[3].num;    
+            resultados.zod = {num: loteria[7].num, sg:loteria[7].sg};  
         }
         if (range(hour, 22, 0)) {
             resultados.hour = "10:00 PM"
-            resultados.a = data[158].num;    
-            resultados.b = data[159].num;    
-            resultados.zod = data[160].num;    
-            resultados.zod = {num: data[162].num, sg:data[162].sg}; 
+            resultados.a = loteria[4].num;    
+            resultados.b = loteria[5].num;    
+            resultados.zod = {num: loteria[8].num, sg:loteria[8].sg}; 
         }
     });
+    console.log(resultados);
     return resultados;
 };
 
-
+//FILTRAR NUMEROS TRIPLE GANA Y SUPER GANA ZOD
 const getTripleGanaSuperGanaZod = async () => {
     const resultados = {
         hour:'00:00 AM',
@@ -74,23 +81,52 @@ const getTripleGanaSuperGanaZod = async () => {
     
     const hour = getHour("24").split(":")[0];
     await axios.get(url, { headers }).then(({ data }) => {
+        const loterias = {
+            supergana:[],
+            triplegana:[],
+        }
+        data.forEach((element) => {
+            if(element.pro=="SuperGana_Sig") loterias.supergana.push(element);
+            if(element.pro=="TripleGana_Sig") loterias.triplegana.push(element);
+        });
+
         if (range(hour, 13, 15)) {
             resultados.hour = "01:00 PM"
-            resultados.supergana = {num:data[151].num, sg:data[151].sg};    
-            resultados.triplegana = {num:data[183].num, sg:data[183].sg};    
+            resultados.supergana = loterias.supergana[0];    
+            resultados.triplegana = loterias.triplegana[0];    
         }
         if (range(hour, 16, 21)) {
             resultados.hour = "04:00 PM"
-          resultados.supergana = {num:data[152].num, sg:data[152].sg};    
-            resultados.triplegana = {num:data[184].num, sg:data[184].sg};  
+            resultados.supergana = loterias.supergana[1];    
+            resultados.triplegana = loterias.triplegana[1];    
         }
         if (range(hour, 22, 0)) {
             resultados.hour = "10:00 PM"
-           resultados.supergana = {num:data[153].num, sg:data[153].sg};    
-            resultados.triplegana = {num:data[185].num, sg:data[185].sg};   
+            resultados.supergana = loterias.supergana[2];    
+            resultados.triplegana = loterias.triplegana[2];   
         }
     });
     return resultados;
 };
 
-module.exports = { getPiramidNumbers, getTripleTachiraZod, getTripleGanaSuperGanaZod };
+//FILTRAR RESULTADOS DE ANIMIALITOS, CONDORGANA, TROPIGANA, FRUITAGANA, TRINAPA
+const getResultadosAnimalitosLoteria = async () => {
+    const resultados = {
+       tropigana: [],
+       fruitagana:[],
+       trinapa:[],
+       condorgana:[]
+    };
+    await axios.get(url, { headers }).then(({ data }) => {
+        data.forEach((element,index )=> {
+            if(element.pro=="TropiGana") resultados.tropigana.push(element);
+            if(element.pro=="FruitaGana") resultados.fruitagana.push(element);
+            if(element.pro=="TriNapa") resultados.trinapa.push(element);
+            if(element.pro=="CondorGana") resultados.condorgana.push(element);
+        });
+    });
+    return resultados;
+};
+
+
+module.exports = { getPiramidNumbers, getTripleTachiraZod, getTripleGanaSuperGanaZod, getResultadosAnimalitosLoteria };
