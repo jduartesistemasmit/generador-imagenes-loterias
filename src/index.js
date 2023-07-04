@@ -302,15 +302,15 @@ app.get("/animalitos-loteria", (req, res) => {
                     ctx.font = "35px Mont";
                     ctx.fillText(text[i].num, x, y);
                     y += 28;
-                    ctx.font = `${text[i].sg.length>9? "18px":"23px"} Mont`;
+                    ctx.font = `${text[i].sg.length>8? "18px":"23px"} Mont`;
                     ctx.fillText(text[i].sg, x, y);
                     aux++;
                 }
             }
-            drawResults(508,383,resultados.tropigana)
-            drawResults(778,383,resultados.fruitagana)
-            drawResults(1064,383,resultados.trinapa)
-            drawResults(1324,383,resultados.condorgana)
+            drawResults(509,384,resultados.tropigana)
+            drawResults(779,384,resultados.fruitagana)
+            drawResults(1064,384,resultados.trinapa)
+            drawResults(1325,384,resultados.condorgana)
 
             // res.setHeader("Content-Type", "image/png");
             // res.send(canvas.toBuffer());
